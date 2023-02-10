@@ -1,1 +1,47 @@
-<p>test</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Room</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="title">
+        <h1>Room no. x</h1><br>
+    </div>
+    
+    <div class="players">
+        <h2>Players:</h2><br>
+        <ul>
+            <li></li>
+            <li></li>
+        </ul>
+    </div>
+
+    <div class="gamefield">
+        <table>
+            <tr>
+            <td id="NW" onclick="change(id)"></td>
+            <td id="N"  onclick="change(id)" class="vertical"></td>
+            <td id="NE" onclick="change(id)"></td>
+            </tr>
+            <tr>
+            <td id="W" onclick="change(id)" class="horizontal"></td>
+            <td id="C" onclick="change(id)" class="vertical horizontal"></td>
+            <td id="E" onclick="change(id)" class="horizontal"></td>
+            </tr>
+            <tr>
+            <td id="SW" onclick="change(id)"></td>
+            <td id="S"  onclick="change(id)" class="vertical"></td>
+            <td id="SE" onclick="change(id)"></td>
+            </tr>
+        </table>
+    </div>
+
+    <script src="socket.io/socket.io.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
