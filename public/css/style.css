@@ -8,7 +8,7 @@ body {
 }
 
 
-.form .gamefield {
+.form .gamefield .players {
     display: flex;
     justify-content: center;
 }
