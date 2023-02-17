@@ -18,7 +18,7 @@ io.on("connection", socket => {
 
     //user joins a room
     socket.on("joinRoom", ({username, room, role}) => {
-        console.log("New connection");//log on the server
+        //console.log("New connection");//log on the server
 
         //check if there are 2 or more players in the room already and assign "X" or "O" as a symbol
         let symbol="";
@@ -96,7 +96,7 @@ io.on("connection", socket => {
 
     //user disconnects from a room
     socket.on("disconnect", () => {
-        console.log("Disconnection"); //log on the server
+        //console.log("Disconnection"); //log on the server
         const user = userLeave(socket.id);
 
         if(user) {

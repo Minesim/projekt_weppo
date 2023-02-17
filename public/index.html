@@ -19,11 +19,18 @@
             <input type="text" id="username" name="username" required autocomplete="off" style="width:200px"><br>
             
             <label for="room">pick room:</label><br>
-            <select id="room" name="room" required size="8" style="width:200px"><br>
+            <select id="room" name="room" size="8" style="width:200px"><br>
                 <option value="xd">xd</option>
                 <option value="dx">dx</option>
                 <option value="dy">dy</option>
-            </select><br>
+            </select><br><br>
+
+
+            <label for="enterRoomName">or, add a new room to the list:</label><br>
+            <input type="text" id="newRoomName" style="width:200px"><br>
+            <button type="button" onclick="addNewRoom()">Create new room</button><br><br>       
+            
+            
             
             <label for="role">Enter the room as:</label><br>
             <select id="role" name="role" required style="width:200px"><br>
@@ -34,5 +41,6 @@
             <input type="submit" value="Enter" style="width:120px; height:30px">
         </form>
     </div>
+    <script src="js/index.js"></script>
 </body>
 </html>
