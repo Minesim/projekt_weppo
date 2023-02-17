@@ -30,8 +30,7 @@ socket.on("roomMembers", (users) => {
 
 //print recieved message to the console
 socket.on("message", message => {
-    //TODO: make it display on the side as logs, perhaps even as a chat
-    console.log(message);
+    document.getElementById("logList").innerHTML += "<li>" + message + "</li>";
 })
 
 //server requests curent board state for incoming user
@@ -106,7 +105,7 @@ function dispayRoomMembers(users) {
 
 function dipslayUsernameAndRole(username, role) {
     document.getElementById("usernameInfo").innerHTML = "<p>" + `You are: ${username}` + "</p>";
-    document.getElementById("roleInformation").innerHTML = "<p>" + `your role is: ${role}` + "</p>";
+    document.getElementById("roleInfo").innerHTML = "<p>" + `your role is: ${role}` + "</p>";
 }
 
 

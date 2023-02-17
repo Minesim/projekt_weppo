@@ -15,6 +15,11 @@
 .information {
     display: flex;
     justify-content: space-around;
+    border: solid 3px goldenrod;
+    margin-top: 50px;
+}
+#usernameInfo, #turnInfo, #roleInfo {
+    border: 1px red;
 }
 
 
@@ -24,7 +29,9 @@
 }  
 
 .logs {
-    text-align: center;
+    text-align: right;
+    overflow-y: scroll;
+    height: 350px;
 }
 
 #role {
@@ -35,6 +42,10 @@
     display: flex;
     justify-content: center;
     text-align: center;
+}
+
+#logList {
+    list-style-type: none;
 }
 
 td {
