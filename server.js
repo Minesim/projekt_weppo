@@ -42,8 +42,8 @@ io.on("connection", socket => {
         const user = userJoin(socket.id, username, room, role, symbol); //create new user
 
         socket.join(user.room); //join room
-        socket.emit("message", `Welcome ${username}`); //to the user
-        socket.broadcast.to(user.room).emit("message", `${username} has joined the room as a ${role}`) //to all room members
+        socket.emit("message", `Welcome <mark>${username}</mark>`); //to the user
+        socket.broadcast.to(user.room).emit("message", `<mark>${username}</mark> has joined the room as a ${role}`) //to all room members
         
 
         //sending new room member information to all room members
@@ -100,7 +100,7 @@ io.on("connection", socket => {
         const user = userLeave(socket.id);
 
         if(user) {
-            io.to(user.room).emit("message", `${user.role} ${user.username} has left the room`) //to all room members
+            io.to(user.room).emit("message", `${user.role} <mark>${user.username}</mark> has left the room`) //to all room members
             //send updated user list
             io.to(user.room).emit("roomMembers", users = getRoomUsers(user.room))
         }
