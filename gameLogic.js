@@ -1,25 +1,26 @@
 function checkIfLegalMove(fieldId, board) {
-    if (board(fieldId)) return 0;
+    if (board[fieldId] !== '') return 0;
     else return 1;
 }
 
-//player is "O" or "X"
-function makeMove(fieldId, player, board) {
-    board[fieldId] = player;
+//symbol is "O" or "X"
+function makeMove(fieldId, symbol, board) {
+    board[fieldId] = symbol;
     return board;
 }
 
 //returns 0 when not end, 1 when winning move was just played, 2 when there is a draw
-function checkIfEnd(board) {
+function checkIfEnd(board, symbol) {
+    console.log(board);
     //winning conditions
-    if ((board[NW]===board[N] && board[N]===board[NE]) ||
-        (board[W]===board[C] && board[C]===board[E]) ||
-        (board[SW]===board[S] && board[S]===board[SE]) ||
-        (board[NW]===board[W] && board[W]===board[SW]) ||
-        (board[N]===board[C] && board[C]===board[S]) ||
-        (board[NE]===board[E] && board[E]===board[SE]) ||
-        (board[NW]===board[C] && board[C]===board[SE]) ||
-        (board[SW]===board[C] && board[C]===board[NE])
+    if ((board["NW"] === symbol && board["N"] === symbol && board["NE"] === symbol) ||
+        (board["W"] === symbol && board["C"] === symbol && board["E"] === symbol) ||
+        (board["SW"] === symbol && board["S"] === symbol && board["SE"] === symbol) ||
+        (board["NW"] === symbol && board["W"] === symbol && board["SW"] === symbol) ||
+        (board["N"] === symbol && board["C"] === symbol && board["S"] === symbol) ||
+        (board["NE"] === symbol && board["E"] === symbol && board["SE"] === symbol) ||
+        (board["NW"] === symbol && board["C"] === symbol && board["SE"] === symbol) ||
+        (board["NE"] === symbol && board["C"] === symbol && board["SW"] === symbol)
     )
         return 1;
     else {

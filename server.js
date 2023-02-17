@@ -2,7 +2,7 @@ const path = require("path");
 const express = require("express");
 const http = require("http");
 const socketio = require("socket.io");
-const {userJoin, getCurrentUser, userLeave, getRoomUsers, getNumberOfPlayers} = require("./users");
+const {userJoin, getCurrentUser, userLeave, getRoomUsers, getRoomPlayers, getNumberOfPlayers} = require("./users");
 const {checkIfLegalMove, makeMove, checkIfEnd} = require("./gameLogic")
 
 const app = express();
@@ -17,56 +17,84 @@ app.use(express.static(path.join(__dirname,"public")));
 io.on("connection", socket => {
 
     //user joins a room
-    socket.on("joinRoom", ({username,room,role}) => {
+    socket.on("joinRoom", ({username, room, role}) => {
         console.log("New connection");//log on the server
 
-        //TODO: deal with more than 2 players, assign X or O
-
-        //check if there are 2 or more players in the room already
-        if(role === "player" && getNumberOfPlayers(room) >= 2)
-        {
-            socket.emit("message", "Failed to join as a player, you are a spectator"); //to the user
-            role = "spectator";
+        //check if there are 2 or more players in the room already and assign "X" or "O" as a symbol
+        let symbol="";
+        if(role === "player") {
+            if (getNumberOfPlayers(room) >= 2) {
+                socket.emit("message", "Failed to join as a player, you are a spectator"); //to the user
+                role = "spectator";
+                symbol = "";
+            }
+            else { //assign "X" or "O" to the players
+                if (getNumberOfPlayers(room) == 0) symbol = "X";
+                else if (getNumberOfPlayers(room) == 1) { 
+                    //to make sure the players don't get the same symbol
+                    if (getRoomPlayers(room)[0].symbol === "X") symbol = "O";
+                    else symbol = "X";
+                }
+            }
+            socket.emit("symbol", symbol);
         }
 
-        const user = userJoin(socket.id,username,room,role); //create new user
+        const user = userJoin(socket.id, username, room, role, symbol); //create new user
 
         socket.join(user.room); //join room
         socket.emit("message", `Welcome ${username}`); //to the user
         socket.broadcast.to(user.room).emit("message", `${username} has joined the room as a ${role}`) //to all room members
         
 
-        //sending room member information to all room members
+        //sending new room member information to all room members
         io.to(user.room).emit("roomMembers", users = getRoomUsers(user.room))
+        //sending room name to incoming user
         socket.emit("roomName", user.room);
+
+        //sending the current board state to incoming user
+        /*
+        the server doesn't store the board, so it has to be received from some other room member
+        it is neccessary, otherwise the new user won't see correct information till next move,
+        and if the new user is a player, their move could overwrite the current board
+        */
+        if (getRoomUsers(user.room).length > 1) {
+        let otherRoomUser = getRoomUsers(user.room)[0].id
+        io.to(otherRoomUser).emit("giveCurrentBoard"); //dealt with below
+        }
+    })
+    
+    //received current board, can send it to all, including incoming, users
+    socket.on("currentBoardReceived", ({board, room}) => {
+        io.to(room).emit("newBoard", board);
     })
     
 
     //user tries to make a move
-    socket.on("Move", ({role, fiedlId, userId, board}) => {
+    socket.on("move", ({role, symbol, fieldId, userId, board, room}) => {
+        let info;
         if (role==="player") {
             //check if the move was legal
-            if (!checkIfLegalMove(fiedlId, board)) {
+            if (!checkIfLegalMove(fieldId, board)) {
                 info = "illegalMove";
             }
             else {
-                board = makeMove(fieldId, player, board);
+                board = makeMove(fieldId, symbol, board);
+                io.to(room).emit("newBoard", board); //send new board state to the room users
+                
                 //check if the game ended (win/draw)
-                let result = checkIfEnd(board);
+                let result = checkIfEnd(board, symbol);
                 if (result === 2) info = "draw";
                 else if (result === 1) info = `win by: ${userId}`;
                 else info = "continue";
             }
             //emit new information about the game to all room members
-            io.to(user.room).emit("nextMove", info);
-            
-            //document.getElementById(fiedlId).innerHTML = "X";
+            io.to(room).emit("nextMove", info);
         }
     })
 
     //user disconnects from a room
     socket.on("disconnect", () => {
-        console.log("Disconnection");
+        console.log("Disconnection"); //log on the server
         const user = userLeave(socket.id);
 
         if(user) {

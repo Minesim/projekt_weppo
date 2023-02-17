@@ -1,8 +1,8 @@
 const users = [];
 
 //user joins the chat
-function userJoin(id, username, room, role) {
-  const user = { id, username, room, role }; //create a new user
+function userJoin(id, username, room, role, symbol) {
+  const user = { id, username, room, role, symbol }; //create a new user
   users.push(user);
 
   return user;
@@ -28,8 +28,13 @@ function getRoomUsers(room) {
 }
 
 
+function getRoomPlayers(room) {
+    return users.filter(user => (user.room === room && user.role === "player"));
+}
+
+
 function getNumberOfPlayers(room) {
-    return users.filter(user => (user.room === room && user.role === "player")).length;
+    return getRoomPlayers(room).length;
 }
 
 
@@ -38,5 +43,6 @@ module.exports = {
     getCurrentUser,
     userLeave,
     getRoomUsers,
+    getRoomPlayers,
     getNumberOfPlayers
   };
