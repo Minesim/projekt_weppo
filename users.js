@@ -25,11 +25,18 @@ function userLeave(id) {
 
 function getRoomUsers(room) {
     return users.filter(user => user.room === room);
-  }
+}
+
+
+function getNumberOfPlayers(room) {
+    return users.filter(user => (user.room === room && user.role === "player")).length;
+}
+
 
 module.exports = {
     userJoin,
     getCurrentUser,
     userLeave,
-    getRoomUsers
+    getRoomUsers,
+    getNumberOfPlayers
   };

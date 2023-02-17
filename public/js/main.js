@@ -19,16 +19,34 @@ socket.on("roomMembers", (users) => {
 
 //print recieved message to the console
 socket.on("message", message => {
+    //TODO: max it display on the side as logs, perhaps even as a chat
     console.log(message);
 })
 
-
+function getBoard() {
+    return {
+        NW: document.getElementById("NW").innerHTML,
+        N : document.getElementById("N").innerHTML,
+        NE: document.getElementById("NE").innerHTML,
+        W : document.getElementById("W").innerHTML,
+        C : document.getElementById("C").innerHTML,
+        E : document.getElementById("E").innerHTML,
+        SW : document.getElementById("SW").innerHTML,
+        S : document.getElementById("S").innerHTML,
+        SE : document.getElementById("SE").innerHTML,
+    }
+}
 //make move on the tic-tac-toe field
-function change(id)
+function move(id)
 {
-    document.getElementById(id).innerHTML = "X";
+    socket.emit("Move", role, id, socket.id, getBoard()); //send information what move was made and by which user
 }
 
+socket.on("nextMove", info => {
+    //if (info === "draw")
+    //else if (info ==) win
+    //TODO: deal with new information
+})
 
 function displayRoomName(room) {
     let title = document.getElementById("title");
