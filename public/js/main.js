@@ -37,10 +37,21 @@ function displayRoomName(room) {
 
 
 function dispayRoomMembers(users) {
-    console.log(users);
-    let ul = document.getElementById("playerList");
-    ul.innerHTML = "";
+    //dislay player list
+    let ulPlayers = document.getElementById("playerList");
+    ulPlayers.innerHTML = "";
     for (user in users) {
-        ul.innerHTML += "<li>" + users[user].username + "</li>";
+        if (users[user].role==="player") {
+            ulPlayers.innerHTML += "<li>" + users[user].username + "</li>";
+        }
+    }
+
+    //display spectator list
+    let ulSpectators = document.getElementById("spectatorList");
+    ulSpectators.innerHTML = "";
+    for (user in users) {
+        if (users[user].role === "spectator") {
+            ulSpectators.innerHTML += "<li>" + users[user].username + "</li>";
+        }
     }
 }
