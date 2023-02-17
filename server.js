@@ -9,9 +9,9 @@ const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
 
-
 //setting "public" as static folder
 app.use(express.static(path.join(__dirname,"public")));
+
 
 
 io.on("connection", socket => {
@@ -35,6 +35,8 @@ io.on("connection", socket => {
                     if (getRoomPlayers(room)[0].symbol === "X") symbol = "O";
                     else symbol = "X";
                 }
+                //new player entered the room, no sense in keeping the old game
+                io.to(room).emit("startNewGame", turn = "X");
             }
             socket.emit("symbol", symbol);
         }
@@ -45,12 +47,12 @@ io.on("connection", socket => {
         socket.emit("message", `Welcome <mark>${username}</mark>`); //to the user
         socket.broadcast.to(user.room).emit("message", `<mark>${username}</mark> has joined the room as a ${role}`) //to all room members
         
-
         //sending new room member information to all room members
         io.to(user.room).emit("roomMembers", users = getRoomUsers(user.room))
+        
         //sending room name to incoming user
         socket.emit("roomName", user.room);
-        //sending their username and role to the user so that it can be displayed
+        //sending the incoming user their username and role so that it can be displayed
         socket.emit("username/role", {username,role});
 
         //sending the current board state to incoming user

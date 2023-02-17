@@ -5,6 +5,7 @@ const socket = io();
 const { username, room, role } = Qs.parse(location.search, {
     ignoreQueryPrefix: true,
 });
+
 //send username and url to the server
 socket.emit("joinRoom", {username, room, role})
 
@@ -19,7 +20,6 @@ socket.on("username/role", ({username,role}) => {
 //get symbol assigned by the server
 let symbol = "";
 socket.on("symbol", (s) => {
-    //TODO: display your symbol on the side
     symbol = s;
 })
 
@@ -28,15 +28,22 @@ socket.on("roomMembers", (users) => {
     dispayRoomMembers(users);
 })
 
-//print recieved message to the console
+//print recieved message to the logs
 socket.on("message", message => {
     document.getElementById("logList").innerHTML += "<li>" + message + "</li>";
 })
 
-//server requests curent board state for incoming user
+//server requests current board state for incoming user
 socket.on("giveCurrentBoard", () => {
     let board = getBoard();
     socket.emit("currentBoardReceived", { board, room });
+})
+
+let TURN = "X"; //whose turn is it
+socket.on("startNewGame", turn => {
+    TURN = turn;
+    console.log("XDDD");
+    clearBoard();
 })
 
 //display new state of the board
@@ -71,7 +78,8 @@ function getBoard() {
 function move(fieldId) {
     let board = getBoard();
     let userId = socket.id
-    socket.emit("move", {role, symbol, fieldId, userId, board, room }); //send information what move was made and by which user
+    //send information what move was made and by which user
+    socket.emit("move", {role, symbol, fieldId, userId, board, room });
 }
 
 
@@ -122,4 +130,15 @@ function displayBoard(board) {
     document.getElementById("SE").innerHTML = board["SE"];
 }
 
+function clearBoard() {
+    document.getElementById("NW").innerHTML = "";
+    document.getElementById("N").innerHTML = "";
+    document.getElementById("NE").innerHTML = "";
+    document.getElementById("W").innerHTML = "";
+    document.getElementById("C").innerHTML = "";
+    document.getElementById("E").innerHTML = "";
+    document.getElementById("SW").innerHTML = "";
+    document.getElementById("S").innerHTML = "";
+    document.getElementById("SE").innerHTML = "";
+}
 
