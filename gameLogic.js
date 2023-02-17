@@ -11,7 +11,6 @@ function makeMove(fieldId, symbol, board) {
 
 //returns 0 when not end, 1 when winning move was just played, 2 when there is a draw
 function checkIfEnd(board, symbol) {
-    console.log(board);
     //winning conditions
     if ((board["NW"] === symbol && board["N"] === symbol && board["NE"] === symbol) ||
         (board["W"] === symbol && board["C"] === symbol && board["E"] === symbol) ||
