@@ -50,6 +50,8 @@ io.on("connection", socket => {
         io.to(user.room).emit("roomMembers", users = getRoomUsers(user.room))
         //sending room name to incoming user
         socket.emit("roomName", user.room);
+        //sending their username and role to the user so that it can be displayed
+        socket.emit("username/role", {username,role});
 
         //sending the current board state to incoming user
         /*

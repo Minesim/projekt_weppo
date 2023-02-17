@@ -12,6 +12,9 @@ socket.on("roomName", (room) => {
     displayRoomName(room);
 })
 
+socket.on("username/role", ({username,role}) => {
+    dipslayUsernameAndRole(username, role);
+})
 
 //get symbol assigned by the server
 let symbol = "";
@@ -37,6 +40,19 @@ socket.on("giveCurrentBoard", () => {
     socket.emit("currentBoardReceived", { board, room });
 })
 
+//display new state of the board
+socket.on("newBoard", board => {
+    displayBoard(board);
+})
+
+//handle information about new move
+socket.on("nextMove", info => {
+    //if (info === "draw")
+    //else if (info == win)
+    //TODO: deal with new information
+})
+
+
 function getBoard() {
     return {
         "NW" : document.getElementById("NW").innerHTML,
@@ -50,6 +66,8 @@ function getBoard() {
         "SE" : document.getElementById("SE").innerHTML,
     }
 }
+
+
 //make move on the tic-tac-toe field
 function move(fieldId) {
     let board = getBoard();
@@ -58,21 +76,10 @@ function move(fieldId) {
 }
 
 
-socket.on("newBoard", board => {
-    displayBoard(board);
-})
-
-
-socket.on("nextMove", info => {
-    //if (info === "draw")
-    //else if (info == win)
-    //TODO: deal with new information
-})
-
-
+//displays room name on the page and on the card bar
 function displayRoomName(room) {
-    let title = document.getElementById("title");
-    title.innerHTML += "<h1>Room: " + room + "</h1><br>";
+    document.getElementById("title").innerHTML = "Room " + room;
+    document.getElementById("roomName").innerHTML += "<h1>Room: " + room + "</h1><br>";
 }
 
 
@@ -96,6 +103,13 @@ function dispayRoomMembers(users) {
     }
 }
 
+
+function dipslayUsernameAndRole(username, role) {
+    document.getElementById("usernameInfo").innerHTML = "<p>" + `You are: ${username}` + "</p>";
+    document.getElementById("roleInformation").innerHTML = "<p>" + `your role is: ${role}` + "</p>";
+}
+
+
 //displays board with new information after move
 function displayBoard(board) {
     document.getElementById("NW").innerHTML = board["NW"];
@@ -108,3 +122,5 @@ function displayBoard(board) {
     document.getElementById("S").innerHTML = board["S"];
     document.getElementById("SE").innerHTML = board["SE"];
 }
+
+
