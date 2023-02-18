@@ -42,7 +42,6 @@ socket.on("giveCurrentBoard", () => {
 let TURN = "X"; //whose turn is it
 socket.on("startNewGame", turn => {
     TURN = turn;
-    console.log("XDDD");
     clearBoard();
 })
 
@@ -52,7 +51,7 @@ socket.on("newBoard", board => {
 })
 
 //handle information about new move
-socket.on("nextMove", info => {
+socket.on("nextMove", (info, winner) => {
     if (info === "illegalMove") {
         //no need to to anything
     }
@@ -66,18 +65,19 @@ socket.on("nextMove", info => {
         TURN = "";
     }
     else if (info === "win") {
-        gameOver("win",TURN);
+        gameOver("win",winner);
         TURN = "";
     }
 })
 
 
-function gameOver(result, turn) {
+function gameOver(result, winner) {
     if (result === "draw") {
-        document.getElementById("turn").innerHTML = "GAME OVER, DRAW";
+        document.getElementById("turn").innerHTML = "<mark>GAME OVER, DRAW</mark>";
     }
     else if (result === "win") {
-        document.getElementById("turn").innerHTML = `GAME OVER, ${turn} WON`;
+        
+        document.getElementById("turn").innerHTML = `<mark>GAME OVER, ${winner} WON</mark>`;
     }
 
 }
@@ -158,6 +158,7 @@ function displayBoard(board) {
     document.getElementById("SE").innerHTML = board["SE"];
 }
 
+//clears board and turn info below it
 function clearBoard() {
     document.getElementById("NW").innerHTML = "";
     document.getElementById("N").innerHTML = "";
@@ -168,5 +169,7 @@ function clearBoard() {
     document.getElementById("SW").innerHTML = "";
     document.getElementById("S").innerHTML = "";
     document.getElementById("SE").innerHTML = "";
+
+    document.getElementById("turn").innerHTML = "It is X's turn";
 }
 

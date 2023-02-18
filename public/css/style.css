@@ -48,6 +48,10 @@
     list-style-type: none;
 }
 
+.information {
+    font-size: 1.4rem;
+}
+
 td {
     width: 100px;
     height: 100px;

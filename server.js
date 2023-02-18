@@ -37,6 +37,7 @@ io.on("connection", socket => {
                 }
                 //new player entered the room, no sense in keeping the old game
                 io.to(room).emit("startNewGame", turn = "X");
+                io.to(room).emit("message", "New game started");
             }
             socket.emit("symbol", symbol);
         }
@@ -76,6 +77,7 @@ io.on("connection", socket => {
     //user tries to make a move
     socket.on("move", ({role, symbol, fieldId, username, board, room, TURN}) => {
         let info;
+        let winner;
         if (role === "player" && TURN === symbol) {
             //check if the move was legal
             if (!checkIfLegalMove(fieldId, board)) {
@@ -94,12 +96,13 @@ io.on("connection", socket => {
                 } 
                 else if (result === 1) {
                     info = "win";
-                    io.to(room).emit(`message","Game over, ${username} won`);
+                    io.to(room).emit("message",`Game over, ${username} won`);
+                    winner = username;
                 } 
                 else info = "continue";
             }
             //emit new information about the game to all room members
-            io.to(room).emit("nextMove", info);
+            io.to(room).emit("nextMove", info, winner);
         }
     })
 
