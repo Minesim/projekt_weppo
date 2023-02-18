@@ -74,9 +74,9 @@ io.on("connection", socket => {
     
 
     //user tries to make a move
-    socket.on("move", ({role, symbol, fieldId, userId, board, room}) => {
+    socket.on("move", ({role, symbol, fieldId, userId, board, room, TURN}) => {
         let info;
-        if (role==="player") {
+        if (role === "player" && TURN === symbol) {
             //check if the move was legal
             if (!checkIfLegalMove(fieldId, board)) {
                 info = "illegalMove";
@@ -88,7 +88,7 @@ io.on("connection", socket => {
                 //check if the game ended (win/draw)
                 let result = checkIfEnd(board, symbol);
                 if (result === 2) info = "draw";
-                else if (result === 1) info = `win by: ${userId}`;
+                else if (result === 1) info = "win";
                 else info = "continue";
             }
             //emit new information about the game to all room members

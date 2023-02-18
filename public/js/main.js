@@ -53,10 +53,27 @@ socket.on("newBoard", board => {
 
 //handle information about new move
 socket.on("nextMove", info => {
-    //if (info === "draw")
-    //else if (info == win)
-    //TODO: deal with new information
+    if (info === "illegalMove") {
+        //no need to to anything
+    }
+    else if (info == "continue") {
+        if (TURN === "X") TURN = "O";
+        else if (TURN ==="O") TURN = "X";
+    }
+    else if (info === "draw") {
+        gameOver(draw);
+        TURN = "";
+    }
+    else if (info === "win") {
+        gameOver(win,TURN);
+        TURN = "";
+    }
 })
+
+
+function gameOver(result, turn) {
+    //deal with game end
+}
 
 
 function getBoard() {
@@ -79,7 +96,7 @@ function move(fieldId) {
     let board = getBoard();
     let userId = socket.id
     //send information what move was made and by which user
-    socket.emit("move", {role, symbol, fieldId, userId, board, room });
+    socket.emit("move", {role, symbol, fieldId, userId, board, room, TURN });
 }
 
 
