@@ -59,20 +59,27 @@ socket.on("nextMove", info => {
     else if (info == "continue") {
         if (TURN === "X") TURN = "O";
         else if (TURN ==="O") TURN = "X";
+        displayTurn(TURN);
     }
     else if (info === "draw") {
-        gameOver(draw);
+        gameOver("draw");
         TURN = "";
     }
     else if (info === "win") {
-        gameOver(win,TURN);
+        gameOver("win",TURN);
         TURN = "";
     }
 })
 
 
 function gameOver(result, turn) {
-    //deal with game end
+    if (result === "draw") {
+        document.getElementById("turn").innerHTML = "GAME OVER, DRAW";
+    }
+    else if (result === "win") {
+        document.getElementById("turn").innerHTML = `GAME OVER, ${turn} WON`;
+    }
+
 }
 
 
@@ -97,6 +104,10 @@ function move(fieldId) {
     let userId = socket.id
     //send information what move was made and by which user
     socket.emit("move", {role, symbol, fieldId, userId, board, room, TURN });
+}
+
+function displayTurn(TURN) {
+    document.getElementById("turn").innerHTML = `It is ${TURN}'s turn`;
 }
 
 
