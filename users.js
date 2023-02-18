@@ -9,11 +9,6 @@ function userJoin(id, username, room, role, symbol) {
 }
 
 
-function getCurrentUser(id) {
-  return users.find(user => user.id === id);
-}
-
-
 function userLeave(id) {
     const index = users.findIndex(user => user.id === id);
 
@@ -40,7 +35,6 @@ function getNumberOfPlayers(room) {
 
 module.exports = {
     userJoin,
-    getCurrentUser,
     userLeave,
     getRoomUsers,
     getRoomPlayers,

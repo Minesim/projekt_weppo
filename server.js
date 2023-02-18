@@ -2,7 +2,7 @@ const path = require("path");
 const express = require("express");
 const http = require("http");
 const socketio = require("socket.io");
-const {userJoin, getCurrentUser, userLeave, getRoomUsers, getRoomPlayers, getNumberOfPlayers} = require("./users");
+const {userJoin, userLeave, getRoomUsers, getRoomPlayers, getNumberOfPlayers} = require("./users");
 const {checkIfLegalMove, makeMove, checkIfEnd} = require("./gameLogic")
 
 const app = express();
@@ -74,7 +74,7 @@ io.on("connection", socket => {
     
 
     //user tries to make a move
-    socket.on("move", ({role, symbol, fieldId, userId, board, room, TURN}) => {
+    socket.on("move", ({role, symbol, fieldId, username, board, room, TURN}) => {
         let info;
         if (role === "player" && TURN === symbol) {
             //check if the move was legal
@@ -84,11 +84,18 @@ io.on("connection", socket => {
             else {
                 board = makeMove(fieldId, symbol, board);
                 io.to(room).emit("newBoard", board); //send new board state to the room users
+                io.to(room).emit("message",`${username} made a move`);
                 
                 //check if the game ended (win/draw)
                 let result = checkIfEnd(board, symbol);
-                if (result === 2) info = "draw";
-                else if (result === 1) info = "win";
+                if (result === 2) {
+                    info = "draw";
+                    io.to(room).emit("message","Game over, draw");
+                } 
+                else if (result === 1) {
+                    info = "win";
+                    io.to(room).emit(`message","Game over, ${username} won`);
+                } 
                 else info = "continue";
             }
             //emit new information about the game to all room members

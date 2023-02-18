@@ -103,7 +103,7 @@ function move(fieldId) {
     let board = getBoard();
     let userId = socket.id
     //send information what move was made and by which user
-    socket.emit("move", {role, symbol, fieldId, userId, board, room, TURN });
+    socket.emit("move", {role, symbol, fieldId, username, board, room, TURN });
 }
 
 function displayTurn(TURN) {
